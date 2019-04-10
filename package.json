@@ -14,6 +14,7 @@
     "react-json-editor-ajrm": "^2.5.9",
     "react-redux": "^5.0.7",
     "react-scripts": "1.1.4",
+    "react-vis": "^1.11.6",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
     "uuid": "^3.2.1"

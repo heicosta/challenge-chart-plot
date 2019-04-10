@@ -8,16 +8,28 @@ import locale from 'react-json-editor-ajrm/locale/en';
 import {XYPlot, XAxis, YAxis, VerticalGridLines, HorizontalGridLines, LineSeries, Crosshair} from 'react-vis';
 
 class NewChart extends React.Component {
-	state = {
-		title: '',
-		body: '',
-		crosshairValues: []
-	};
+
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			title: '',
+			body: [
+				[{x: 1, y: 10}, {x: 2, y: 7}],
+				[{x: 1, y: 20}, {x: 2, y: 5}]
+			],
+			crosshairValues: []
+		};
+
+		this.handleInputChange = this.handleInputChange.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleReset = this.handleReset.bind(this);
+	}
 
 	// sample data for simple demonstrate the business correct input pattern
 	sampleObject = [
 
-		/* data read from challange_frontend.png with https://www.newocr.com/
+		// data read from challange_frontend.png with https://www.newocr.com/
     {type: 'start', timestamp: 1519862400000, select: ['min_response_time', 'max_response_time'], group: ['os', 'browser' ]},
     {type: 'span', timestamp: 1519862400000, begin: 1519862400000, end: 1519862460000},
     {type: 'data', timestamp: 1519862400000, os: 'linux', browser: 'chrome', min_response_time: 0.1, max_response_time: 1.3},
@@ -29,17 +41,24 @@ class NewChart extends React.Component {
     {type: 'data', timestamp: 1519862460000, os: 'mac', browser: 'firefox', min_response_time: 0.2, max_response_time: 1.1},
     {type: 'data', timestamp: 1519862460000, os: 'linux', browser: 'firefox', min_response_time: 0.3, max_response_time: 1.4},
     {type: 'stop', timestamp: 1519862460000}
-       */
-
-		[{x: 1, y: 10}, {x: 2, y: 7}, {x: 3, y: 15}],
-		[{x: 1, y: 20}, {x: 2, y: 5}, {x: 3, y: 15}]
 	];
 
 	handleInputChange = e => {
-		const jsonObj = e.jsonObj;
-		for (let prop in jsonObj) {
-			console.log(prop + " -> " + jsonObj[prop]);
+		const events = e.jsObject;
+		let eventsMap = new Map();
+		for (const event of events) {
+			switch (event.type) {
+				case 'start':
+					// todo
+				case 'span':
+					// todo
+				case 'data':
+				// todo
+				case 'stop':
+				// todo
+			}
 		}
+
 		this.setState({
 			[e.target.name]: e.target.value
 		});
@@ -75,7 +94,7 @@ class NewChart extends React.Component {
 	 * @private
 	 */
 	_onNearestX = (value, {index}) => {
-		this.setState({crosshairValues: DATA.map(d => d[index])});
+		this.setState({crosshairValues: this.sampleObject.map(d => d[index])});
 	};
 
 	render() {
@@ -88,7 +107,6 @@ class NewChart extends React.Component {
 							placeholder="Chart Title"
 							className="form-control"
 							name="title"
-							onChange={this.handleInputChange}
 							value={this.state.title}
 						/>
 					</div>
@@ -100,16 +118,17 @@ class NewChart extends React.Component {
 							width='100%'
 							height='200px'
 							value={this.state.body}
+							onChange={this.handleInputChange}
 						/>
 					</div>
-					<div className="form-group">
-						<XYPlot onMouseLeave={this._onMouseLeave} width={300} height={300}>
+					<div>
+						<XYPlot onMouseLeave={this._onMouseLeave} width={600} height={300}>
 							<VerticalGridLines />
 							<HorizontalGridLines />
 							<XAxis />
 							<YAxis />
-							<LineSeries onNearestX={this._onNearestX} data={this.sampleObject[0]} />
-							<LineSeries data={this.sampleObject[1]} />
+							<LineSeries onNearestX={this._onNearestX} data={this.state.body[0]} />
+							<LineSeries data={this.state.body[1]} />
 							<Crosshair
 								values={this.state.crosshairValues}
 								className={'test-class-name'}

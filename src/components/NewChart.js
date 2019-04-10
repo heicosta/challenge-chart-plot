@@ -5,7 +5,7 @@ import JSONInput from 'react-json-editor-ajrm';
 import locale from 'react-json-editor-ajrm/locale/en';
 
 // @uber/React-vis plugin
-import {XYPlot, XAxis, YAxis, VerticalGridLines, HorizontalGridLines, LineSeries, Crosshair} from 'react-vis';
+import { XYPlot, XAxis, YAxis, VerticalGridLines, HorizontalGridLines, LineMarkSeries } from 'react-vis';
 
 class NewChart extends React.Component {
 
@@ -15,8 +15,10 @@ class NewChart extends React.Component {
 		this.state = {
 			title: '',
 			body: [
-				[{x: 1, y: 10}, {x: 2, y: 7}],
-				[{x: 1, y: 20}, {x: 2, y: 5}]
+				[{x: 0.1, y: 1.3}, {x: 0.2, y: 0.9}], // { linux-chrome [min_response_time, max_response_time] }
+				[{x: 0.2, y: 1.2}, {x: 0.1, y: 1.0}], // { mac-chrome [min_response_time, max_response_time] }
+				[{x: 0.1, y: 1.0}, {x: 0.3, y: 1.4}], // { linux-firefox [min_response_time, max_response_time] }
+				[{x: 0.3, y: 1.2}, {x: 0.2, y: 1.1}], // { mac-firefox [min_response_time, max_response_time] }
 			],
 			crosshairValues: []
 		};
@@ -33,13 +35,13 @@ class NewChart extends React.Component {
     {type: 'start', timestamp: 1519862400000, select: ['min_response_time', 'max_response_time'], group: ['os', 'browser' ]},
     {type: 'span', timestamp: 1519862400000, begin: 1519862400000, end: 1519862460000},
     {type: 'data', timestamp: 1519862400000, os: 'linux', browser: 'chrome', min_response_time: 0.1, max_response_time: 1.3},
-    {type: 'data', timestamp: 1519862400000, os: 'mac', browser: 'chrome', min_response_time: 0.2, max_response_time: 1.2},
-    {type: 'data', timestamp: 1519862400000, os: 'mac', browser: 'firefox', min_response_time: 0.3, max_response_time: 1.2},
-    {type: 'data', timestamp: 1519862400000, os: 'linux', browser: 'firefox', min_response_time: 0.1, max_response_time: 1.0},
-    {type: 'data', timestamp: 1519862460000, os: 'linux', browser: 'chrome', min_response_time: 0.2, max_response_time: 0.9},
-    {type: 'data', timestamp: 1519862460000, os: 'mac', browser: 'chrome', min_response_time: 0.1, max_response_time: 1.0},
-    {type: 'data', timestamp: 1519862460000, os: 'mac', browser: 'firefox', min_response_time: 0.2, max_response_time: 1.1},
-    {type: 'data', timestamp: 1519862460000, os: 'linux', browser: 'firefox', min_response_time: 0.3, max_response_time: 1.4},
+		{type: 'data', timestamp: 1519862460000, os: 'linux', browser: 'chrome', min_response_time: 0.2, max_response_time: 0.9},
+		{type: 'data', timestamp: 1519862400000, os: 'mac', browser: 'chrome', min_response_time: 0.2, max_response_time: 1.2},
+		{type: 'data', timestamp: 1519862460000, os: 'mac', browser: 'chrome', min_response_time: 0.1, max_response_time: 1.0},
+		{type: 'data', timestamp: 1519862400000, os: 'linux', browser: 'firefox', min_response_time: 0.1, max_response_time: 1.0},
+		{type: 'data', timestamp: 1519862460000, os: 'linux', browser: 'firefox', min_response_time: 0.3, max_response_time: 1.4},
+		{type: 'data', timestamp: 1519862400000, os: 'mac', browser: 'firefox', min_response_time: 0.3, max_response_time: 1.2},
+		{type: 'data', timestamp: 1519862460000, os: 'mac', browser: 'firefox', min_response_time: 0.2, max_response_time: 1.1},
     {type: 'stop', timestamp: 1519862460000}
 	];
 
@@ -122,16 +124,34 @@ class NewChart extends React.Component {
 						/>
 					</div>
 					<div>
-						<XYPlot onMouseLeave={this._onMouseLeave} width={600} height={300}>
+						<XYPlot width={300} height={300}>
 							<VerticalGridLines />
 							<HorizontalGridLines />
 							<XAxis />
 							<YAxis />
-							<LineSeries onNearestX={this._onNearestX} data={this.state.body[0]} />
-							<LineSeries data={this.state.body[1]} />
-							<Crosshair
-								values={this.state.crosshairValues}
-								className={'test-class-name'}
+							<LineMarkSeries
+								className="linemark-series-example"
+								style={{
+									strokeWidth: '3px'
+								}}
+								lineStyle={{stroke: 'red'}}
+								markStyle={{stroke: 'blue'}}
+								data={this.state.body[0]}
+							/>
+							<LineMarkSeries
+								className="linemark-series-example-2"
+								curve={'curveMonotoneX'}
+								data={this.state.body[1]}
+							/>
+							<LineMarkSeries
+								className="linemark-series-example-3"
+								curve={'curveMonotoneX'}
+								data={this.state.body[2]}
+							/>
+							<LineMarkSeries
+								className="linemark-series-example-4"
+								curve={'curveMonotoneX'}
+								data={this.state.body[3]}
 							/>
 						</XYPlot>
 					</div>
